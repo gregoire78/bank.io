@@ -1,0 +1,16 @@
+<form (ngSubmit)="virer()">
+  <div>
+    <h3>Virement</h3>
+    <label for="inpDestinataire">Destinataire : </label>
+    <input type="text" id="inpDestinataire" name="destinataire" [(ngModel)]="virement.destinataire">
+  </div>
+  <div>
+      <label for="inpMontant">Montant : </label>
+      <input type="text" id="inpMontant" name="montant" [(ngModel)]="virement.montant">
+  </div>
+  <div>
+      <label for="inpBanque">Banque : </label>
+      <input type="text" id="inpBanque" name="banque" [(ngModel)]="virement.banque">
+  </div>
+  <input type="submit" value="Valider">
+</form>
