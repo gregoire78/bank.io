@@ -1,0 +1,22 @@
+.red{
+    background-color:rgb(189, 31, 31);
+}
+.green{
+    background-color:rgb(58, 194, 58);
+}
+.table-perso{
+    box-shadow:5px 5px 5px silver;
+    width: 100%;
+
+}
+
+th{
+    text-align: center;
+}
+td{
+    text-align: center;
+}
+
+.page-header{
+    text-align: center;
+}

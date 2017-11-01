@@ -1,0 +1,20 @@
+<div class="container">
+  <div class="page-header">
+    <h2>Accueil Compte</h2>
+  </div>
+  <table class="table table-condensed table-striped table-hover table-perso">
+    <thead>
+      <tr>
+        <th>Intitulé</th><th>Mouvement</th><th>Date</th><th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of compte" [ngClass]="{'red':item.mouvement < 0, 'green':item.mouvement > 0}">
+        <td [textContent]="item.intitule | uppercase" #composant></td>
+        <td [textContent]="item.mouvement"></td>
+        <td [textContent]="item.date | date :'dd/MM/yy'"></td>
+        <td style="background-color:white" class="text-center"></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
