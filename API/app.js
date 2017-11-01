@@ -10,6 +10,7 @@ var index = require('./routes/index');
 var users = require('./routes/users');
 
 var app = express();
+mongoose.Promise = global.Promise;
 // connection base de donnée mongo
 mongoose.connect('mongodb://db/bankio', function(err) {
   if (err) { throw err; }
