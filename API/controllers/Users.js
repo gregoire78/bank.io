@@ -68,8 +68,8 @@ module.exports = Users = {
 		if (Object.keys(req.body).length === 0) {
 			return res.status(422).json('rien a mettre à jour')
 		}
-		User.findByIdAndUpdate(id, req.body, function (err, user) {
-			res.json({'success': req.body})
-		});
+		User.findByIdAndUpdate(id, req.body, {new:true},function (err, user) {
+			res.json({'updated': user})
+		})
 	}
 };

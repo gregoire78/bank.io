@@ -36,11 +36,7 @@ var validatorp = [
 		.exists().withMessage('email est requis')
 		.isEmail().withMessage('email est mauvais')
 		.optional({nullable:true})
-		.trim()
-		.custom(value => {
-			return User.findOne({email: value}).exec()
-				.then(user => console.log(user._id))
-		}).withMessage('Email est déjà utilisé'),
+		.trim(),
 	check('password', 'passwords est requis et doit contenir au moins un nombre').matches(/\d/).optional({nullable:true}).trim(),
 	check('lastname').trim(),
 	check('firstname').trim(),
