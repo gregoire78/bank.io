@@ -5,6 +5,7 @@ var mongoose = require('mongoose'),
     ValidatorError  = mongoose.Error.ValidatorError;
 
 var bcrypt = require('bcrypt');
+var Jwt = require('jsonwebtoken');
 
 module.exports = Users = {
     create: function (req, res, next) {
@@ -32,13 +33,11 @@ module.exports = Users = {
             userModel.save(function (err) {
                 if (err) {
                     var error = [];
-                    console.log('Error Inserting New Data', err);
                     if (err.name == 'ValidationError') {
                         Object.entries(err.errors).forEach(function(val, key) {
                             error.push({field: val[0], message: val[1].message});
-                            console.log(val);
                         }, this);
-                        return res.json(error)
+                        return res.status(500).json(error)
                     }
                     if (err.name == 'MongoError' && err.code === 11000) {
                         return next(new Error('field must be unique'))
@@ -50,11 +49,7 @@ module.exports = Users = {
     },
 
     get: function (req, res, next) {
-        User.findById(req.params.id, function (err, user) {
-            if (!user) {
-                return res.status(406).json('id érroné ou manquant');
-            }
-
+        User.findById(req.decoded.id, function (err, user) {
             var userModel = {
                 id: user._id,
                 firstname: user.firstname,
@@ -70,11 +65,10 @@ module.exports = Users = {
             };
             res.json(userModel);
         })
-
     },
 
     update: function (req, res, next) {
-        var id = req.params.id;
+        var id = req.decoded.id;
 
         /*if (req.body.email) {
             User.findOne({email: req.body.email}, function (err, user) {
@@ -84,12 +78,50 @@ module.exports = Users = {
             })
         }*/
         if (Object.keys(req.body).length === 0) {
-            return res.status(422).json('rien a mettre à jour')
+            return res.status(406).json('rien a mettre à jour')
         }
-
-
-        User.findByIdAndUpdate(id, req.body, {new: true}, function (err, user) {
+        console.log(req.body)
+      
+        User.findByIdAndUpdate(id, req.body, {runValidators : true, new: true, context: 'query'}, function (err, user) {
+            if (err) {
+                var error = [];
+                if (err.name == 'ValidationError') {
+                    Object.entries(err.errors).forEach(function(val, key) {
+                        error.push({field: val[0], message: val[1].message});
+                    }, this);
+                    return res.status(500).json(error)
+                };
+            };
             res.json({'updated': user})
         });
+    },
+
+    authenticate: function (req, res, next) {
+        var errorBody=[];
+        if (!req.body.email) errorBody.push({field: 'email', message: 'paramètre email manquants'});
+        if (!req.body.password) errorBody.push({field: 'password', message: 'paramètre paswword manquants'});
+        if (errorBody.length){
+            return res.status(406).json(errorBody)
+        }
+        
+        User.findOne({email: req.body.email}, function(err, user){
+            if(user){
+                bcrypt.compare(req.body.password, user.password).then(function(data) {
+                    if(data === true){
+                        var tokenData = {
+                            email: user.email,
+                            id: user._id
+                        };
+                        var result = Jwt.sign(tokenData, 'cresus');
+                        
+                        return res.json({token: result})
+                    } else {
+                        return res.status(404).json({field: 'password', message: 'user not found'})
+                    }
+                });
+            } else {
+                return res.status(404).json({field: 'email', message: 'user not found'})
+            }
+        })
     }
 };
