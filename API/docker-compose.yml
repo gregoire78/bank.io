@@ -3,10 +3,9 @@ services:
   web:
     image: greg78/node:latest
     ports:
-      - "8080:3000"
+      - "3000:3000"
     volumes:
       - D:\www\local.dev\bank.io\API:/usr/src/app
-      - D:\www\local.dev\bank.io\API\package.json:/usr/src/app/package.json
     links:
       - db
     command: npm start

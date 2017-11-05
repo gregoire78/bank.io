@@ -1,35 +1,49 @@
 require('../models/Users');
 var mongoose = require('mongoose'),
-    User = mongoose.model('User');
-var {check, validationResult} = require('express-validator/check');
-var {matchedData, sanitize} = require('express-validator/filter');
+    User = mongoose.model('User'),
+    ValidationError = mongoose.Error.ValidationError,
+    ValidatorError  = mongoose.Error.ValidatorError;
 
 var bcrypt = require('bcrypt');
 
 module.exports = Users = {
     create: function (req, res, next) {
-        var errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            return res.status(422).json({errors: errors.mapped()});
+
+        var user = req.body;
+
+        if(!user.password){
+            return res.json('rien');
         }
-
-        var user = matchedData(req);
-
         bcrypt.hash(user.password, 10).then(function (hash) {
 
-            var userModel = new User();
-
-            userModel.firstname = user.firstname;
-            userModel.lastname = user.lastname;
-            userModel.email = user.email;
-            userModel.password = hash;
-            userModel.address.city = user.city;
-            userModel.address.street = user.street;
-            userModel.address.postal_code = user.postalCode;
-            userModel.isdn = user.isdn;
+            var userModel = new User({
+                firstname : user.firstname,
+                lastname : user.lastname,
+                email: user.email,
+                password : hash,
+                address:{
+                    city: user.city,
+                    street: user.street,
+                    postal_code: user.postal_code
+                },
+                msisdn: user.msisdn
+            });
 
             userModel.save(function (err) {
-                if (err) return next(err);
+                if (err) {
+                    var error = [];
+                    console.log('Error Inserting New Data', err);
+                    if (err.name == 'ValidationError') {
+                        Object.entries(err.errors).forEach(function(val, key) {
+                            error.push({field: val[0], message: val[1].message});
+                            console.log(val);
+                        }, this);
+                        return res.json(error)
+                    }
+                    if (err.name == 'MongoError' && err.code === 11000) {
+                        return next(new Error('field must be unique'))
+                    }
+                };
                 res.json('Successfully register a new user');
             });
         });
@@ -47,7 +61,7 @@ module.exports = Users = {
                 lastname: user.lastname,
                 email: user.email,
                 password: user.password,
-                isdn: user.isdn,
+                msisdn: user.msisdn,
                 address: {
                     city: user.address.city,
                     street: user.address.street,
@@ -61,7 +75,6 @@ module.exports = Users = {
 
     update: function (req, res, next) {
         var id = req.params.id;
-        var errors = validationResult(req);
 
         /*if (req.body.email) {
             User.findOne({email: req.body.email}, function (err, user) {
@@ -70,10 +83,6 @@ module.exports = Users = {
                 }
             })
         }*/
-        if (!errors.isEmpty()) {
-            return res.status(422).json({errors: errors.mapped()});
-        }
-
         if (Object.keys(req.body).length === 0) {
             return res.status(422).json('rien a mettre à jour')
         }
