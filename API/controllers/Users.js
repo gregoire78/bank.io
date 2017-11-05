@@ -49,21 +49,8 @@ module.exports = Users = {
     },
 
     get: function (req, res, next) {
-        User.findById(req.decoded.id, function (err, user) {
-            var userModel = {
-                id: user._id,
-                firstname: user.firstname,
-                lastname: user.lastname,
-                email: user.email,
-                password: user.password,
-                msisdn: user.msisdn,
-                address: {
-                    city: user.address.city,
-                    street: user.address.street,
-                    postal_code: user.address.postal_code
-                }
-            };
-            res.json(userModel);
+        User.findById(req.decoded.id, {__v: false}, function (err, user) {
+            res.json(user);
         })
     },
 
@@ -80,9 +67,8 @@ module.exports = Users = {
         if (Object.keys(req.body).length === 0) {
             return res.status(406).json('rien a mettre à jour')
         }
-        console.log(req.body)
       
-        User.findByIdAndUpdate(id, req.body, {runValidators : true, new: true, context: 'query'}, function (err, user) {
+        User.findByIdAndUpdate(id, {$set: req.body}, {runValidators : true, new: true, context: 'query'}, function (err, user) {
             if (err) {
                 var error = [];
                 if (err.name == 'ValidationError') {
@@ -91,7 +77,11 @@ module.exports = Users = {
                     }, this);
                     return res.status(500).json(error)
                 };
-            };
+            }/* else {
+                if(req.body.email){
+                    req.decoded.email = req.body.email
+                }
+            }*/
             res.json({'updated': user})
         });
     },
@@ -109,7 +99,6 @@ module.exports = Users = {
                 bcrypt.compare(req.body.password, user.password).then(function(data) {
                     if(data === true){
                         var tokenData = {
-                            email: user.email,
                             id: user._id
                         };
                         var result = Jwt.sign(tokenData, 'cresus');

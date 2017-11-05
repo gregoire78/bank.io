@@ -27,26 +27,12 @@ var tokenAuth = function(req, res, next){
     }
 }
 
-/*
-verifie l'email
-*/
-var verifEmail = function(req, res, next){
-   User.findOne({email: req.body.email}, function(err, val){
-        if(err){
-            delete req.body.email;
-            next();
-        } else {
-            next();
-        }
-    });
-}
-
 /* GET users listing. */
 router.post('/', Users.create);
 
 router.get('/', tokenAuth, Users.get);
 
-router.put('/', tokenAuth, verifEmail, Users.update);
+router.put('/', tokenAuth, Users.update);
 
 router.post('/authenticate', Users.authenticate);
 
