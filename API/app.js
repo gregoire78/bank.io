@@ -13,7 +13,7 @@ var accounts = require('./routes/accounts');
 var app = express();
 
 mongoose.Promise = global.Promise;
-mongoose.connect('mongodb://db/bankio', function(err) {
+mongoose.connect('mongodb://admin:5Vn8XEOBGfSBVE1q@cluster0-shard-00-00-uckpb.mongodb.net:27017,cluster0-shard-00-01-uckpb.mongodb.net:27017,cluster0-shard-00-02-uckpb.mongodb.net:27017/bankio?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin', function(err) {
   if (err) { throw err; }
 });
 
