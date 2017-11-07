@@ -1,0 +1,26 @@
+version: '3'
+services:
+  web:
+    image: greg78/node:latest
+    ports:
+      - "3000:3000"
+    volumes:
+      - .\API:/usr/src/app
+    links:
+      - db
+    command: npm start
+  db:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+  angular:
+    image: greg78/ng-cli
+    ports:
+      - "4200:4200"
+    volumes:
+      - .\client:/home/node/app
+    command: ng serve --host 0.0.0.0
+volumes:
+  mongo-data:
