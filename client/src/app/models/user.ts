@@ -1,3 +1,6 @@
 export class User{
-    constructor(public username:string="aaitlhadj", public password:string="test"){}
+    constructor(
+        public email:string="gregoire.joncour@gmail.com",
+        public password:string="azerty1"
+    ){}
 }

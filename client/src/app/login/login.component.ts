@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { User } from '../models/user';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'login',
@@ -8,15 +10,20 @@ import { User } from '../models/user';
 })
 export class LoginComponent implements OnInit {
 
-  user:User;
+  user:any = {email: 'gregoire.joncour@gmail.com', password:'azerty1'}; //pour test
+  returnUrl:string;
 
-  constructor() {
-    this.user = new User
-   }
+  constructor(private route: ActivatedRoute, private router: Router,public httpUser: HttpClient) {}
 
   ngOnInit() {
+    this.returnUrl = '/login'; //route
   }
-enregistrer(){
-  console.log(`${this.user.username} ${this.user.password}`)
-}
+
+  login(data){
+    this.httpUser.post('http://localhost:3000/users/authenticate', data).subscribe((data:any)=>{
+      console.log(data.token)
+      sessionStorage.setItem('token', data.token)
+      this.router.navigateByUrl(this.returnUrl); //redirection vers login
+    });
+  }
 }
