@@ -9,8 +9,8 @@ export class Compte{
 
 export class Mouvement{
     constructor(
-        public intitule:String, 
-        public mouvement:Number, 
-        public date:Date
+        public title:String, 
+        public price:Number, 
+        public date?:Date
     ){}
 }
