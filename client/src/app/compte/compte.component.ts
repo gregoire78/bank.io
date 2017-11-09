@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Compte, Mouvement } from '../models/compte';
 import { CompteService } from '../compte.service';
-import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'compte',
@@ -14,6 +14,8 @@ export class CompteComponent implements OnInit {
   mouvements: Array<Mouvement> = [];
   responseMessage: string;
   closeResult: string;
+  indexCompte: number;
+  modalTitle: string;
 
 
   constructor(private compteService: CompteService, private modalService: NgbModal) {
@@ -37,21 +39,20 @@ export class CompteComponent implements OnInit {
       data.date = new Date();
       this.responseMessage = '';
       console.log(data)
-      this.compteService.createMouvement(data, this.comptes[0]._id).subscribe(
+      this.compteService.createMouvement(data, this.comptes[this.indexCompte]._id).subscribe(
         (success) => {
           console.log(success);
-          this.comptes[0].mouvements.push(data);
+          this.comptes[this.indexCompte].mouvements.push(data);
         },
         (error) => this.responseMessage = error.error.message
       )
     }
   }
 
-  modal(chaine){
-    alert(chaine)
-  }
-
-  open(content) {
+  /**modal bootstrap */
+  open(content, index, title) {
+    this.indexCompte = index;
+    this.modalTitle = title.textContent;
     this.modalService.open(content).result.then((result) => {
       this.closeResult = `Closed with: ${result}`;
     }, (reason) => {
@@ -65,8 +66,9 @@ export class CompteComponent implements OnInit {
     } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
       return 'by clicking on a backdrop';
     } else {
-      return  `with: ${reason}`;
+      return `with: ${reason}`;
     }
   }
+  /*** */
 
 }
