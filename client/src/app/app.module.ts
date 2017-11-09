@@ -13,13 +13,15 @@ import { CompteComponent } from './compte/compte.component';
 import {CompteService} from './compte.service';
 import { ActionComponent } from './action/action.component';
 import { ActionService} from './action.service';
+import { NumborPipe } from './numbor.pipe';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
     ActionComponent,
-    CompteComponent
+    CompteComponent,
+    NumborPipe
   ],
   imports: [
     BrowserModule, 

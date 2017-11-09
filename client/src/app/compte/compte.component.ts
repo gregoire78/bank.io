@@ -9,16 +9,15 @@ import { CompteService } from '../compte.service';
 })
 export class CompteComponent implements OnInit {
   
-  @Input()
-  compte:Array<Compte>;
-
+  comptes:Array<Compte>;
 
   constructor(private compteService: CompteService) {
   }
 
   ngOnInit() {
-    this.compteService.getCompte().subscribe(data => {
-      console.log(data);
+    this.compteService.getCompte().subscribe((data:Array<Compte>) => {
+      this.comptes = data;
+      console.log(data[0].mouvements);
     },
     error => {
       console.log('error')
