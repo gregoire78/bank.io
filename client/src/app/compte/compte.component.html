@@ -1,11 +1,19 @@
 <div class="container">
-  <div class="page-header">
-    <h2>Mes Comptes</h2>
-  </div>
+  <header class="header clearfix">
+      <nav>
+        <ul class="nav nav-pills float-right">
+          <li class="nav-item">
+            <a class="nav-link" [routerLink]="['/login']">Logout</a>
+          </li>
+        </ul>
+      </nav>
+      <h3>Mes Comptes</h3>
+    </header>
 
   <table class="table table-sm table-bordered table-striped table-hover">
     <thead>
       <tr>
+        
         <th>Comptes</th>
         <th>Mouvements</th>
         <th>Edition</th>
@@ -13,7 +21,7 @@
     </thead>
     <tbody>
       <tr *ngFor="let compte of comptes; index as i">
-        <td #composant>{{compte.name | uppercase }} ({{compte._id}})</td>
+        <td [textContent]="compte.name | uppercase" #composant></td>
         <td>
           <p *ngFor="let mouvement of compte.mouvements" [ngClass]="{'green':mouvement.price>=0, 'red':mouvement.price<0}">
             <span [textContent]="mouvement.title"></span> :
