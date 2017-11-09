@@ -29,7 +29,8 @@ import { ActionService} from './action.service';
   providers: [
     AuthenticationService,
     AuthGuard,
-    ActionService
+    ActionService,
+    CompteService
   ],
   bootstrap: [AppComponent]
 })
