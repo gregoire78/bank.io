@@ -4,7 +4,7 @@ var Users = require('../controllers/Accounts');
 var Jwt = require('jsonwebtoken');
 
 var tokenAuth = function(req, res, next){
-    var token = req.body.token || req.query.token || req.headers['Authorization'] || (req.get('authorization') ? req.get('authorization').split('Bearer ')[1] : false);
+    var token = req.body.token || req.query.token || req.headers['Authorization'] || (req.get('authorization') ? req.get('authorization').split('Bearer ')[1] : false) || req.get('Authorization');
     if (token) {
         Jwt.verify(token, 'cresus', function(err, decoded) {
             if (err) {
