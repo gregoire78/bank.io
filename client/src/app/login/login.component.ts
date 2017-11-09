@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { User } from '../models/user';
 import { Router, ActivatedRoute } from '@angular/router';
+import { AuthenticationService } from '../authentification.service';
 
 @Component({
   selector: 'login',
@@ -12,18 +12,26 @@ export class LoginComponent implements OnInit {
 
   user:any = {email: 'gregoire.joncour@gmail.com', password:'azerty1'}; //pour test
   returnUrl:string;
+  loading = false;
+  responseMessage;
 
-  constructor(private route: ActivatedRoute, private router: Router,public httpUser: HttpClient) {}
+  constructor(private route: ActivatedRoute, private router: Router, private authenticationService: AuthenticationService) {}
 
   ngOnInit() {
-    this.returnUrl = '/login'; //route
+    this.authenticationService.logout();
+    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/user';
   }
 
   login(data){
-    this.httpUser.post('http://localhost:3000/users/authenticate', data).subscribe((data:any)=>{
-      console.log(data.token)
-      sessionStorage.setItem('token', data.token)
-      this.router.navigateByUrl(this.returnUrl); //redirection vers login
-    });
+    this.loading = true;
+    this.authenticationService.login(this.user.email, this.user.password).subscribe(
+      data => {
+        this.loading = false;
+        this.router.navigate([this.returnUrl]);
+      },
+      error => {
+        this.responseMessage=error.error.message;
+        this.loading = false;
+      });
   }
 }
