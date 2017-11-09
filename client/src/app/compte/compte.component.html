@@ -1,19 +1,18 @@
 <div class="container">
   <header class="header clearfix">
-      <nav>
-        <ul class="nav nav-pills float-right">
-          <li class="nav-item">
-            <a class="nav-link" [routerLink]="['/login']">Logout</a>
-          </li>
-        </ul>
-      </nav>
-      <h3>Mes Comptes</h3>
-    </header>
+    <nav>
+      <ul class="nav nav-pills float-right">
+        <li class="nav-item">
+          <a class="nav-link" [routerLink]="['/login']">Logout</a>
+        </li>
+      </ul>
+    </nav>
+    <h3>Mes Comptes</h3>
+  </header>
 
   <table class="table table-sm table-bordered table-striped table-hover">
     <thead>
       <tr>
-        
         <th>Comptes</th>
         <th>Mouvements</th>
         <th>Edition</th>
@@ -32,10 +31,15 @@
         </td>
         <td>
           <button type="button" class="btn btn-secondary btn-sm" (click)="open(content, i, composant)">+ transaction</button>
+          <div class="input-group input-group-sm">
+            <span class="input-group-addon" id="sizing-addon2">@</span>
+            <input type="text" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="sizing-addon2">
+          </div>
         </td>
       </tr>
     </tbody>
   </table>
+
 
 
 

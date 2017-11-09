@@ -4,7 +4,7 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map'
 
 @Injectable()
-export class AuthenticationService {
+export class AuthentificationService {
     constructor(private httpUser: HttpClient) { }
 
     login(username: string, password: string) {

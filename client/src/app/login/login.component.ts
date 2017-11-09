@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { User } from '../models/user';
 import { Router, ActivatedRoute } from '@angular/router';
-import { AuthenticationService } from '../authentification.service';
+import { AuthentificationService } from '../authentification.service';
 
 @Component({
   selector: 'login',
@@ -15,7 +15,7 @@ export class LoginComponent implements OnInit {
   loading = false;
   responseMessage;
 
-  constructor(private route: ActivatedRoute, private router: Router, private authenticationService: AuthenticationService) {}
+  constructor(private route: ActivatedRoute, private router: Router, private authenticationService: AuthentificationService) {}
 
   ngOnInit() {
     this.authenticationService.logout();
