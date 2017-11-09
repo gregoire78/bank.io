@@ -18,7 +18,8 @@ import { ActionService} from './action.service';
   declarations: [
     AppComponent,
     LoginComponent,
-    ActionComponent
+    ActionComponent,
+    CompteComponent
   ],
   imports: [
     BrowserModule, 

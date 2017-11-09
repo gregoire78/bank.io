@@ -1,5 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Compte } from '../models/compte';
+import { CompteService } from '../compte.service';
 
 @Component({
   selector: 'compte',
@@ -12,10 +13,16 @@ export class CompteComponent implements OnInit {
   compte:Array<Compte>;
 
 
-  constructor() {
+  constructor(private compteService: CompteService) {
   }
 
   ngOnInit() {
+    this.compteService.getCompte().subscribe(data => {
+      console.log(data);
+    },
+    error => {
+      console.log('error')
+    })
   }
 
 
