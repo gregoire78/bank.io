@@ -35,7 +35,7 @@ module.exports = Accounts = {
             if(result){
                 return res.json(result)
             }
-            return res.json({ success: false, message: 'Failed to save.' });
+            return res.status(500).json({ success: false, message: 'Failed to save.' });
         });
     },
 

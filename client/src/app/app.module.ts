@@ -27,7 +27,8 @@ import { NumborPipe } from './numbor.pipe';
     BrowserModule, 
     FormsModule,
     routing, 
-    HttpClientModule
+    HttpClientModule,
+    NgbModule.forRoot()
   ],
   providers: [
     AuthenticationService,

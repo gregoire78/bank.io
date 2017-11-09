@@ -1,6 +1,6 @@
 <div class="container">
   <div class="page-header">
-    <h2>Mon Compte</h2>
+    <h2>Mes Comptes</h2>
   </div>
 
   <table class="table table-condensed table-striped table-hover table-perso">
@@ -12,11 +12,12 @@
     </thead>
     <tbody>
       <tr *ngFor="let compte of comptes; index as i">
-        <td [textContent]="compte.name | uppercase" #composant></td>
+        <td (click)="modal(composant.textContent)" #composant>{{compte.name | uppercase }} ({{compte._id}})</td>
         <td>
           <p *ngFor="let mouvement of compte.mouvements" [ngClass]="{'green':mouvement.price>=0, 'red':mouvement.price<0}">
             <span [textContent]="mouvement.title"></span> :
-            <span [textContent]="mouvement.price | numbor"></span> € à
+            <b>{{mouvement.price | numbor}} €</b>
+            <i>le</i>
             <span [textContent]="mouvement.date | date: 'dd/MM/yyyy'"></span>
           </p>
         </td>
@@ -24,28 +25,46 @@
     </tbody>
   </table>
 
-  <div class="panel panel-default" style="margin-left: 180px; margin-top:100px;width: 900px;">
-    <div class="panel-heading">Action
-    </div>
-    <form (ngSubmit)="addMouvement(form.value)" #form="ngForm">
-      <div class="panel-body">
-        <div class="row">
-          <div class="col-md-12">
-            <div class="form-group">
-              <label for="title">Titre</label>
-              <input type="text" class="form-control" id="title" name="title" [(ngModel)]="mouvements.title">
-            </div>
-            <div class="form-group">
-              <label for="somme">Somme</label>
-              <input type="text" class="form-control" id="somme" name="price" [(ngModel)]="mouvements.price">
-            </div>
-          </div>
+  <form (ngSubmit)="form.valid && addMouvement(form.value)" #form="ngForm">
+    <div class="panel-body">
+      <div class="row">
+        <div class="col-md-12">
+          <div *ngIf="responseMessage" class="alert alert-danger">{{responseMessage}}</div>
         </div>
-        <div class="pull-right control group">
-          <button type='submit' class='btn btn-primary' name="submit">Valider</button>
+        <div class="col-md-6 mb-3">
+          <label for="title">Titre</label>
+          <input type="text" class="form-control" id="title" name="title" [ngClass]="{ 'is-invalid': form.submitted && !title.valid }"
+            [(ngModel)]="mouvements.title" #title="ngModel" required>
+          <div *ngIf="form.submitted && !title.valid" class="invalid-feedback">Intitulé de l'action est obligatoire</div>
+        </div>
+        <div class="col-md-6 mb-3">
+          <label for="somme">Somme</label>
+          <input type="text" class="form-control" id="somme" name="price" [ngClass]="{ 'is-invalid': form.submitted && !price.valid }"
+            [(ngModel)]="mouvements.price" #price="ngModel" required>
+          <div *ngIf="form.submitted && !price.valid" class="invalid-feedback">Montant de l'action est obligatoire</div>
         </div>
       </div>
-    </form>
-  </div>
+      <div class="pull-right control group">
+        <button type='submit' class='btn btn-primary' name="submit">Valider</button>
+      </div>
+    </div>
+  </form>
 
-</div>
+  <ng-template #content let-c="close" let-d="dismiss">
+    <div class="modal-header">
+      <h4 class="modal-title">Modal title</h4>
+      <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <p>One fine body&hellip;</p>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-outline-dark" (click)="c('Close click')">Close</button>
+    </div>
+  </ng-template>
+
+  <button class="btn btn-lg btn-outline-primary" (click)="open(content)">Launch demo modal</button>
+  
+  <pre>{{closeResult}}</pre>
