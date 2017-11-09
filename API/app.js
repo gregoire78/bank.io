@@ -4,15 +4,18 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var mongoose = require('mongoose');
 
 var index = require('./routes/index');
 var users = require('./routes/users');
+var accounts = require('./routes/accounts');
 
 var app = express();
 
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
+mongoose.Promise = global.Promise;
+mongoose.connect('mongodb://admin:5Vn8XEOBGfSBVE1q@cluster0-shard-00-00-uckpb.mongodb.net:27017,cluster0-shard-00-01-uckpb.mongodb.net:27017,cluster0-shard-00-02-uckpb.mongodb.net:27017/bankio?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin', function(err) {
+  if (err) { throw err; }
+});
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
@@ -22,8 +25,17 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", '*');
+  res.header("Access-Control-Allow-Credentials", true);
+  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+  res.header("Access-Control-Allow-Headers", 'Authorization,Origin,X-Requested-With,Content-Type,Accept,content-type,application/json');
+  next();
+});
+
 app.use('/', index);
 app.use('/users', users);
+app.use('/accounts', accounts);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -40,7 +52,7 @@ app.use(function(err, req, res, next) {
 
   // render the error page
   res.status(err.status || 500);
-  res.render('error');
+  res.json({'error': res.locals.message, 'info' : res.locals.error});
 });
 
 module.exports = app;

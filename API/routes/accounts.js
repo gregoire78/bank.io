@@ -1,12 +1,7 @@
-var express = require('express');
-var router = express.Router();
-
-var Users = require('../controllers/Users');
+var express = require('express');  
+var router = express.Router(); 
+var Users = require('../controllers/Accounts');
 var Jwt = require('jsonwebtoken');
-
-require('../models/Users');
-var mongoose = require('mongoose'),
-    User = mongoose.model('User');
 
 var tokenAuth = function(req, res, next){
     var token = req.body.token || req.query.token || req.headers['Authorization'] || (req.get('authorization') ? req.get('authorization').split('Bearer ')[1] : false);
@@ -27,13 +22,9 @@ var tokenAuth = function(req, res, next){
     }
 }
 
-/* GET users listing. */
-router.post('/', Users.create);
-
-router.get('/', tokenAuth, Users.get);
-
-router.put('/', tokenAuth, Users.update);
-
-router.post('/authenticate', Users.authenticate);
+router.post('/create', tokenAuth, Accounts.create);
+router.put('/add_mouvement', tokenAuth, Accounts.push);
+router.get('/user', tokenAuth, Accounts.getAccountsForUser);
+router.get('/', tokenAuth, Accounts.getAccounts);
 
 module.exports = router;
