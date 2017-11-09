@@ -7,10 +7,10 @@
         </li>
       </ul>
     </nav>
-    <h3>Mes Comptes</h3>
+    <h1>Mes Comptes</h1>
   </header>
 
-  <table class="table table-sm table-bordered table-striped table-hover">
+  <!--<table class="table table-sm table-bordered table-striped table-hover">
     <thead>
       <tr>
         <th>Comptes</th>
@@ -38,10 +38,7 @@
         </td>
       </tr>
     </tbody>
-  </table>
-
-
-
+  </table>-->
 
   <ng-template #content let-c="close" let-d="dismiss">
     <div class="modal-header">
@@ -83,4 +80,23 @@
     </div>
   </ng-template>
 
-  <pre>{{closeResult}}</pre>
+  <div class="bank_account" *ngFor="let compte of comptes; index as i">
+    <h4 [textContent]="compte.name | uppercase" #composant></h4>
+    <table class="table table-sm table-bordered table-striped table-hover">
+      <thead>
+        <tr>
+          <th class="pointer noselect" (click)="sort('title', i) && flip(i)">Titre <i class="fa" [ngClass]="{'fa-sort': column != 'title', 'fa-sort-asc': (column == 'title' && !isDesc), 'fa-sort-desc': (column == 'title' && isDesc) }" aria-hidden="true"></i></th>
+          <th class="pointer noselect" (click)="sort('price', i)">Montant <small>(en €)</small> <i class="fa" [ngClass]="{'fa-sort': column != 'price', 'fa-sort-asc': (column == 'price' && !isDesc), 'fa-sort-desc': (column == 'price' && isDesc) }" aria-hidden="true"></i></th>
+          <th class="pointer noselect" (click)="sort('date', i)">Date <i class="fa" [ngClass]="{'fa-sort': column != 'date', 'fa-sort-asc': (column == 'date' && !isDesc), 'fa-sort-desc': (column == 'date' && isDesc) }" aria-hidden="true"></i></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let mouvement of compte.mouvements" [ngClass]="{'green':mouvement.price>=0, 'red':mouvement.price<0}">
+          <td [textContent]="mouvement.title"></td>
+          <td>{{mouvement.price | numbor}}</td>
+          <td [textContent]="mouvement.date | date: 'dd/MM/yyyy'"></td>
+        </tr>
+      </tbody>
+    </table>
+    <button type="button" class="btn btn-secondary btn-sm" (click)="open(content, i, composant)">+ transaction</button>
+  </div>

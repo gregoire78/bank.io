@@ -16,6 +16,8 @@ export class CompteComponent implements OnInit {
   closeResult: string;
   indexCompte: number;
   modalTitle: string;
+  isDesc: boolean = false;
+  column: string = '';
 
 
   constructor(private compteService: CompteService, private modalService: NgbModal) {
@@ -70,5 +72,23 @@ export class CompteComponent implements OnInit {
     }
   }
   /*** */
+
+  sort(property, i){
+    this.isDesc = !this.isDesc; //change the direction    
+    this.column = property;
+    let direction = this.isDesc ? 1 : -1;
+
+    this.comptes[i].mouvements.sort(function(a, b){
+        if(a[property] < b[property]){
+            return -1 * direction;
+        }
+        else if( a[property] > b[property]){
+            return 1 * direction;
+        }
+        else{
+            return 0;
+        }
+    });
+};
 
 }

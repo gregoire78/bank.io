@@ -6,3 +6,18 @@
     color: red;
     margin: 0
 }
+.bank_account {
+    margin-bottom: 15px;
+}
+.pointer{
+    cursor: pointer;
+}
+.noselect {
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+    -khtml-user-select: none; /* Konqueror HTML */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none; /* Non-prefixed veon, crsiurrently
+    supported by Chrome and Opera */
+}
