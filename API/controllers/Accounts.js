@@ -45,7 +45,7 @@ module.exports = Accounts = {
             if(result){
                 return res.json(result)
             }
-            return res.json({ success: false, message: 'Failed to get account.' });
+            return res.status(500).json({ success: false, message: 'Failed to get account.' });
         })
     },
 
@@ -54,7 +54,7 @@ module.exports = Accounts = {
             if(result){
                 return res.json(result)
             }
-            return res.json({ success: false, message: 'Failed to get' });
+            return res.status(500).json({ success: false, message: 'Failed to get' });
         })
     }
 };
