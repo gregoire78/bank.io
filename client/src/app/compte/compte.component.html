@@ -7,38 +7,46 @@
         </li>
       </ul>
     </nav>
-    <h1>Mes Comptes</h1>
+    <h1>Mes Comptes
+      <small>
+        <button type="button" class="btn btn-secondary btn-sm" (click)="openCompte(addaccount)">ouvrir un compte</button>
+      </small>
+    </h1>
   </header>
 
-  <!--<table class="table table-sm table-bordered table-striped table-hover">
-    <thead>
-      <tr>
-        <th>Comptes</th>
-        <th>Mouvements</th>
-        <th>Edition</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let compte of comptes; index as i">
-        <td [textContent]="compte.name | uppercase" #composant></td>
-        <td>
-          <p *ngFor="let mouvement of compte.mouvements" [ngClass]="{'green':mouvement.price>=0, 'red':mouvement.price<0}">
-            <span [textContent]="mouvement.title"></span> :
-            <b>{{mouvement.price | numbor}} €</b>
-            <i>le</i>
-            <span [textContent]="mouvement.date | date: 'dd/MM/yyyy'"></span>
-          </p>
-        </td>
-        <td>
-          <button type="button" class="btn btn-secondary btn-sm" (click)="open(content, i, composant)">+ transaction</button>
-          <div class="input-group input-group-sm">
-            <span class="input-group-addon" id="sizing-addon2">@</span>
-            <input type="text" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="sizing-addon2">
+  <ng-template #addaccount let-c="close" let-d="dismiss">
+    <div class="modal-header">
+      <h4 class="modal-title">titre</h4>
+      <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+
+      <form (ngSubmit)="formAccount.valid && addCompte(formAccount.value)" #formAccount="ngForm">
+        <div class="panel-body">
+          <div class="row">
+            <div class="col-md-12">
+              <div *ngIf="responseMessage" class="alert alert-danger">{{responseMessage}}</div>
+            </div>
+            <div class="col-md-12 mb-3">
+              <label for="name">Titre</label>
+              <input type="text" class="form-control" id="name" name="name" [ngClass]="{ 'is-invalid': formAccount.submitted && !name.valid }"
+                [(ngModel)]="comptes.name" #name="ngModel" required>
+              <div *ngIf="formAccount.submitted && !name.valid" class="invalid-feedback">le nom est obligatoire</div>
+            </div>
           </div>
-        </td>
-      </tr>
-    </tbody>
-  </table>-->
+          <div class="pull-right control group">
+            <button type='submit' class='btn btn-primary' name="submit">Valider</button>
+          </div>
+        </div>
+      </form>
+
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-outline-dark" (click)="c('Close click')">Close</button>
+    </div>
+  </ng-template>
 
   <ng-template #content let-c="close" let-d="dismiss">
     <div class="modal-header">
@@ -82,12 +90,22 @@
 
   <div class="bank_account" *ngFor="let compte of comptes; index as i">
     <h4 [textContent]="compte.name | uppercase" #composant></h4>
-    <table class="table table-sm table-bordered table-striped table-hover">
+    <table *ngIf="compte.mouvements && compte.mouvements.length; else elseBlock" class="table table-sm table-bordered table-striped table-hover">
       <thead>
         <tr>
-          <th class="pointer noselect" (click)="sort('title', i) && flip(i)">Titre <i class="fa" [ngClass]="{'fa-sort': column != 'title', 'fa-sort-asc': (column == 'title' && !isDesc), 'fa-sort-desc': (column == 'title' && isDesc) }" aria-hidden="true"></i></th>
-          <th class="pointer noselect" (click)="sort('price', i)">Montant <small>(en €)</small> <i class="fa" [ngClass]="{'fa-sort': column != 'price', 'fa-sort-asc': (column == 'price' && !isDesc), 'fa-sort-desc': (column == 'price' && isDesc) }" aria-hidden="true"></i></th>
-          <th class="pointer noselect" (click)="sort('date', i)">Date <i class="fa" [ngClass]="{'fa-sort': column != 'date', 'fa-sort-asc': (column == 'date' && !isDesc), 'fa-sort-desc': (column == 'date' && isDesc) }" aria-hidden="true"></i></th>
+          <th class="pointer noselect" (click)="sort('title', i) && flip(i)">Titre
+            <i class="fa" [ngClass]="{'fa-sort': column != 'title', 'fa-sort-asc': (column == 'title' && !isDesc), 'fa-sort-desc': (column == 'title' && isDesc) }"
+              aria-hidden="true"></i>
+          </th>
+          <th class="pointer noselect" (click)="sort('price', i)">Montant
+            <small>(en €)</small>
+            <i class="fa" [ngClass]="{'fa-sort': column != 'price', 'fa-sort-asc': (column == 'price' && !isDesc), 'fa-sort-desc': (column == 'price' && isDesc) }"
+              aria-hidden="true"></i>
+          </th>
+          <th class="pointer noselect" (click)="sort('date', i)">Date
+            <i class="fa" [ngClass]="{'fa-sort': column != 'date', 'fa-sort-asc': (column == 'date' && !isDesc), 'fa-sort-desc': (column == 'date' && isDesc) }"
+              aria-hidden="true"></i>
+          </th>
         </tr>
       </thead>
       <tbody>
@@ -98,5 +116,6 @@
         </tr>
       </tbody>
     </table>
+    <ng-template #elseBlock>Commencez par ajouter une transaction</ng-template>
     <button type="button" class="btn btn-secondary btn-sm" (click)="open(content, i, composant)">+ transaction</button>
   </div>

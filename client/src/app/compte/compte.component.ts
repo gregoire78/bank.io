@@ -28,7 +28,6 @@ export class CompteComponent implements OnInit {
       (data: Array<Compte>) => {
         if (data.length) {
           this.comptes = data;
-          console.log(this.comptes);
         }
       },
       error => {
@@ -38,12 +37,10 @@ export class CompteComponent implements OnInit {
 
   addMouvement(data) {
     if (data.title && data.price) {
-      data.date = new Date();
       this.responseMessage = '';
-      console.log(data)
       this.compteService.createMouvement(data, this.comptes[this.indexCompte]._id).subscribe(
         (success) => {
-          console.log(success);
+          data.date = new Date();
           this.comptes[this.indexCompte].mouvements.push(data);
         },
         (error) => this.responseMessage = error.error.message
@@ -51,9 +48,30 @@ export class CompteComponent implements OnInit {
     }
   }
 
+  addCompte(data) {
+    if(data.name){
+      this.compteService.createCompte(data).subscribe(
+        success => {
+          this.comptes.push(data);
+          this.ngOnInit();
+        },
+        error => this.responseMessage = error.error.message
+      )
+    }
+  }
+
+  openCompte(content) {
+    this.modalService.open(content).result.then((result) => {
+      this.closeResult = `Closed with: ${result}`;
+    }, (reason) => {
+      this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+    });
+  }
+
   /**modal bootstrap */
   open(content, index, title) {
     this.indexCompte = index;
+    console.log(index)
     this.modalTitle = title.textContent;
     this.modalService.open(content).result.then((result) => {
       this.closeResult = `Closed with: ${result}`;

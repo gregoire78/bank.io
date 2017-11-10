@@ -15,4 +15,8 @@ export class CompteService {
   createMouvement(mouvement: Mouvement, id) {
     return this.httpCompte.put(`http://localhost:3000/accounts/add_mouvement?id=${id}`, mouvement, {headers: new HttpHeaders().set('Authorization', sessionStorage.getItem('token'))});
   }
+
+  createCompte(account:Compte) {
+    return this.httpCompte.post(`http://localhost:3000/accounts/create`, account, {headers: new HttpHeaders().set('Authorization', sessionStorage.getItem('token'))});
+  }
 }
