@@ -32,7 +32,7 @@ router.post('/', Users.create);
 
 router.get('/', tokenAuth, Users.get);
 
-router.put('/', tokenAuth, Users.update);
+router.patch('/', tokenAuth, Users.update);
 
 router.post('/authenticate', Users.authenticate);
 
